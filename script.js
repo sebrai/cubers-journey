@@ -23,6 +23,40 @@ let game = {
             height: 10,
 
         },
+        {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [3, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 1, 1, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 1, 0, 0, 0,],
+                [0, 2, 0, 0, 0, 0, 0, 1, 1,],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0,],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 1, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 1, 0, 0, 0, 0, 0, 0,],
+            ],
+            width: 10,
+            height: 10,
+
+        },
+        {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [3, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 1, 1, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 1, 0, 0, 0,],
+                [0, 2, 0, 0, 0, 0, 0, 1, 1,],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0,],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 1, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 1, 0, 0, 0, 0, 0, 0,],
+            ],
+            width: 10,
+            height: 10,
+
+        },
     ]
 }
 
@@ -35,13 +69,13 @@ else {
     localStorage.setItem("levels", JSON.stringify(0))
 }
 game.current_level = stored_levels
-const size = [1000,600]
+const size = [1000, 600]
 c.width = size[0]
 c.height = size[1]
 
 let player = {
     x: 100,
-    y: 100,
+    y: 60,
     // speed: movement_speed,
     vx: 0,
     vy: 0,
@@ -49,7 +83,7 @@ let player = {
     acceleration: 5,
     maxSpeed: 10,
     size: 50,
-    jump_height:30,
+    jump_height: 30,
     grounded: false,
     color: "#3654fe",
     mkeys: {
@@ -60,7 +94,7 @@ let player = {
         " ": false
     },
     getangle: function () {
-        let radians = Math.atan2(vy, vx);
+        let radians = Math.atan2(this.vy, this.vx);
         let degrees = radians * (180 / Math.PI)
         return { radians: radians, degrees: degrees }
     },
@@ -68,8 +102,38 @@ let player = {
         ctx.fillStyle = player.color
         ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size)
 
+    },
+   collidesWithLevel: function(testX, testY) {
+
+    const level = game.levels[game.current_level]
+
+    const TILE_W = size[0] / level.width
+    const TILE_H = size[1] / level.height
+
+    const half = this.size / 2
+
+    const left = testX - half
+    const right = testX + half
+    const top = testY - half
+    const bottom = testY + half
+
+    const leftTile = Math.floor(left / TILE_W)
+    const rightTile = Math.floor(right / TILE_W)
+
+    const topTile = Math.floor(top / TILE_H)
+    const bottomTile = Math.floor(bottom / TILE_H)
+
+    for (let ty = topTile; ty <= bottomTile; ty++) {
+        for (let tx = leftTile; tx <= rightTile; tx++) {
+
+            if (isSolidTile(tx, ty)) {
+                return true
+            }
+        }
     }
 
+    return false
+}
 }
 
 document.addEventListener("keydown", (e) => {
@@ -88,21 +152,40 @@ document.addEventListener("keyup", (e) => {
     player.mkeys[lkey] = false
 })
 
-function run_frame() {
+function isSolidTile(tileX, tileY) {
+    const level = game.levels[game.current_level]
+    if (
+        tileX < 0 ||
+        tileY < 0 ||
+        tileX >= level.width ||
+        tileY >= level.height
+    ) {
+        return true
+    }
+    return level.tiles[tileY][tileX] === 1
+}
 
+function run_frame() {
     ctx.clearRect(0, 0, size[0], size[1]) // clear
+
+    const level = game.levels[game.current_level]
+    const block_w = size[0] / level.width
+    const block_h = size[1] / level.height
+    
     for (let y = 0; y < game.levels[game.current_level].height; y++) {
         for (let x = 0; x < game.levels[game.current_level].width; x++) {
 
             const tile = game.levels[game.current_level].tiles[y][x];
-            let block_w = size[0]/game.levels[game.current_level].width
-            let block_h = size[1]/game.levels[game.current_level].height
+
             if (tile === 1) {
                 ctx.strokeStyle = "black"
-                ctx.strokeRect (x*block_w, y*block_h,block_w,block_h);
-            } else if (tile == 2){
+                ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
+            } else if (tile == 2) {
                 ctx.strokeStyle = "blue"
-                ctx.strokeRect (x*block_w, y*block_h,block_w,block_h);
+                ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
+            } else if (tile == 3) {
+                ctx.strokeStyle = "red"
+                ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
             }
         }
     }
@@ -114,36 +197,57 @@ function run_frame() {
     }
     if ((player.mkeys[" "] || player.mkeys["w"]) && player.grounded) {
         player.vy -= player.jump_height
-        player.grounded = false 
+        player.grounded = false
     }
-    if (Math.abs(player.vx > player.maxSpeed)) {
+    if (Math.abs(player.vx) > player.maxSpeed) {
         player.vx = player.maxSpeed * (player.vx / Math.abs(player.vx))
     }
-    player.x += player.vx
-    player.y += player.vy
+const nextX = player.x + player.vx
+
+if (!player.collidesWithLevel(nextX, player.y)) {
+
+    player.x = nextX
+
+} else {
+
+    // stop horizontal movement
+    player.vx = 0
+}
+
+
+
+
+const nextY = player.y + player.vy
+
+if (!player.collidesWithLevel(player.x, nextY)) {
+
+    player.y = nextY
+    player.grounded = false
+
+} else {
+
+    // falling onto floor
+    if (player.vy > 0) {
+
+        player.grounded = true
+
+    }
+
+    // hitting ceiling
+    if (player.vy < 0) {
+
+        // optional ceiling handling
+    }
+
+    // stop vertical movement
+    player.vy = 0
+}
 
     player.vx *= player.friction
     player.vy += game.gravity
-
-
-    if (player.x - player.size / 2 < 0) { // check for edge collitions
-        player.x = player.size / 2
-    } else if (player.x + player.size / 2 > size[0]) {
-        player.x = size[0] - player.size / 2
-    }
-    if (player.y - player.size / 2 < 0) {
-        player.y = player.size / 2
-    } else if (player.y + player.size / 2 > size[1]) {
-        player.y = size[1] - player.size / 2
-        player.grounded = true
-    } else {
-        player.grounded = false
-    }
-    if (player.grounded) {
-        player.vy = 0
-    }
-
+    if ( player.vx <0.0001)player.vx = 0
     player.draw()
     requestAnimationFrame(run_frame)
+    // console.log(player.collidesWithLevel())
 }
 run_frame()
