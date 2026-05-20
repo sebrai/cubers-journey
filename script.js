@@ -4,23 +4,32 @@ const ctx = c.getContext("2d")
 let game = {
     current_level: 0,
     levels_cleared: 0,
+    mx:0,
+    my:0,
     gravity: 2,
+    looping: false,
     levels: [
         {
             tiles: [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [3, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 1, 1, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 1, 0, 0, 0,],
-                [0, 2, 0, 0, 0, 0, 0, 1, 1,],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0,],
-                [1, 1, 1, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 1, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 1, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,],
+                [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+
             ],
-            width: 10,
-            height: 10,
+            width: 13,
+            height: 15,
 
         },
         {
@@ -57,7 +66,63 @@ let game = {
             height: 10,
 
         },
-    ]
+    ],
+    start_level: function (level_index = 0) {
+        this.current_level = level_index
+        startile = this.get_playerstart()
+        player.set_at_start()
+        this.looping = true
+        run_frame()
+    },
+    get_playerstart: function () {
+        let res = { y: 0, x: 0 }
+        this.levels[this.current_level].tiles.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value === 2) {
+                    res = { y: y, x: x }
+                }
+
+            })
+        })
+        return res
+    },
+    pick_level: async function () {
+        return new Promise(resolve => {
+            let x = 40
+            let y = 20
+            let hitboxes = []
+            for (let index = 0; index < game.levels.length; index++) {
+                const level = game.levels[index];
+                ctx.strokeStyle = this.levels_cleared >= index ? "#000000" : "#9e9e9e"
+                ctx.strokeRect(x, y, size[0] * 0.15, 100)
+                ctx.font = "48px Arial"
+                ctx.fillText(index + 1, x + size[0] * 0.06, y + 65)
+
+                hitboxes.push({ x: x, y: y, w: size[0] * 0.15, h: 100,i:index })
+
+                x += size[0] * 0.2
+                if (x > size[0]) {
+                    x = 40
+                    y += size[1] * 0.05 + 100
+                }
+
+            }
+            
+            c.addEventListener("click", () => {
+                hitboxes.forEach(element => {
+                    if ((game.mx > element.x && game.mx < element.x + element.w && game.my > element.y && game.my < element.y + element.h)){
+                        resolve(element.i)
+                    }
+                });
+
+            })
+        })
+
+    },
+    level_select: async function () {
+        let level = await this.pick_level()
+        this.start_level(level)
+    }
 }
 
 stored_levels = localStorage.getItem("levels")
@@ -73,21 +138,23 @@ const size = [1000, 600]
 c.width = size[0]
 c.height = size[1]
 
+let startile = { y: 0, x: 0 }
+
 let player = {
     x: 100,
     y: 60,
     // speed: movement_speed,
     vx: 0,
-    vy: 0,
+    vy: -5,
     friction: 0.7, // closer to 1 = more slipp
     acceleration: 5,
-    maxSpeed: 7,
+    maxSpeed: 8,
     size: 50,
     jump_height: 25,
-    jump_cooldown:25,
-    max_kyotime:5,
-    kyotime:0,
-    since_jump:0,
+    jump_cooldown: 25,
+    max_kyotime: 5,
+    kyotime: 0,
+    since_jump: 0,
     grounded: false,
     color: "#3654fe",
     mkeys: {
@@ -137,8 +204,20 @@ let player = {
         }
 
         return false
+    },
+    set_at_start: function () {
+        const level = game.levels[game.current_level]
+
+        const block_w = size[0] / level.width
+        const block_h = size[1] / level.height
+
+        player.x = startile.x * block_w + block_w / 2
+        player.y = startile.y * block_h + block_h / 2
     }
 }
+
+const spikeImg = new Image()
+spikeImg.src = "./assets/spikes.png"
 
 document.addEventListener("keydown", (e) => {
     let lkey = e.key.toLowerCase()
@@ -155,7 +234,12 @@ document.addEventListener("keyup", (e) => {
     if (!player.mkeys[lkey]) return;
     player.mkeys[lkey] = false
 })
-
+c.addEventListener("mousemove", (event) => {
+    let bbox = c.getBoundingClientRect()
+    game.mx = event.clientX - bbox.left
+    game.my = event.clientY - bbox.top
+    // console.log(game.mx ,game.my)
+})
 function isSolidTile(tileX, tileY) {
     const level = game.levels[game.current_level]
     if (
@@ -185,11 +269,14 @@ function run_frame() {
                 ctx.strokeStyle = "black"
                 ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
             } else if (tile == 2) {
-                ctx.strokeStyle = "blue"
-                ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
+                // ctx.strokeStyle = "blue"
+                // ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
+
             } else if (tile == 3) {
                 ctx.strokeStyle = "red"
                 ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
+            } else if (tile == 4) {
+                ctx.drawImage(spikeImg, block_w * x, block_h * y, block_w, block_h)
             }
         }
     }
@@ -199,15 +286,15 @@ function run_frame() {
     if (player.mkeys.d) {
         player.vx += player.acceleration
     }
-    if ((player.mkeys[" "] || player.mkeys["w"]) && (player.grounded||player.kyotime) && !player.since_jump) {
+    if ((player.mkeys[" "] || player.mkeys["w"]) && (player.grounded || player.kyotime) && !player.since_jump) {
         player.vy -= player.jump_height
         player.grounded = false
         player.since_jump = player.jump_cooldown
     }
 
 
-    if (player.since_jump)player.since_jump--
-    if (player.kyotime)player.kyotime--
+    if (player.since_jump) player.since_jump--
+    if (player.kyotime) player.kyotime--
 
 
     if (Math.abs(player.vx) > player.maxSpeed) {
@@ -237,12 +324,12 @@ function run_frame() {
 
     } else {
 
-        
 
-            while (!player.collidesWithLevel(player.x, player.y + Math.sign(player.vy))) {
-                player.y += Math.sign(player.vy)
-            }
-        
+
+        while (!player.collidesWithLevel(player.x, player.y + Math.sign(player.vy))) {
+            player.y += Math.sign(player.vy)
+        }
+
         // falling onto floor
         if (player.vy > 0) {
 
@@ -255,15 +342,26 @@ function run_frame() {
         // stop vertical movement
         player.vy = 0
     }
-    if (player.grounded){
-    player.vx *= player.friction 
-    player.kyotime = player.max_kyotime
+    if (player.grounded) {
+        player.vx *= player.friction
+        player.kyotime = player.max_kyotime
     }
-    
+
     player.vy += game.gravity
+
+    const tileX = Math.floor(player.x / block_w)
+    const tileY = Math.floor(player.y / block_h)
+
+    if (level.tiles[tileY]?.[tileX] === 4) {
+        player.set_at_start()
+        player.vx = 0
+        player.vy = -5
+    }
+
     if (Math.abs(player.vx) < 0.0001) player.vx = 0
     player.draw()
     requestAnimationFrame(run_frame)
     // console.log(player.collidesWithLevel())
 }
-run_frame()
+
+game.level_select()
