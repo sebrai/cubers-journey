@@ -81,9 +81,13 @@ let player = {
     vy: 0,
     friction: 0.7, // closer to 1 = more slipp
     acceleration: 5,
-    maxSpeed: 10,
+    maxSpeed: 7,
     size: 50,
-    jump_height: 30,
+    jump_height: 25,
+    jump_cooldown:25,
+    max_kyotime:5,
+    kyotime:0,
+    since_jump:0,
     grounded: false,
     color: "#3654fe",
     mkeys: {
@@ -103,37 +107,37 @@ let player = {
         ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size)
 
     },
-   collidesWithLevel: function(testX, testY) {
+    collidesWithLevel: function (testX, testY) {
 
-    const level = game.levels[game.current_level]
+        const level = game.levels[game.current_level]
 
-    const TILE_W = size[0] / level.width
-    const TILE_H = size[1] / level.height
+        const TILE_W = size[0] / level.width
+        const TILE_H = size[1] / level.height
 
-    const half = this.size / 2
+        const half = this.size / 2
 
-    const left = testX - half
-    const right = testX + half
-    const top = testY - half
-    const bottom = testY + half
+        const left = testX - half
+        const right = testX + half
+        const top = testY - half
+        const bottom = testY + half
 
-    const leftTile = Math.floor(left / TILE_W)
-    const rightTile = Math.floor(right / TILE_W)
+        const leftTile = Math.floor(left / TILE_W)
+        const rightTile = Math.floor(right / TILE_W)
 
-    const topTile = Math.floor(top / TILE_H)
-    const bottomTile = Math.floor(bottom / TILE_H)
+        const topTile = Math.floor(top / TILE_H)
+        const bottomTile = Math.floor(bottom / TILE_H)
 
-    for (let ty = topTile; ty <= bottomTile; ty++) {
-        for (let tx = leftTile; tx <= rightTile; tx++) {
+        for (let ty = topTile; ty <= bottomTile; ty++) {
+            for (let tx = leftTile; tx <= rightTile; tx++) {
 
-            if (isSolidTile(tx, ty)) {
-                return true
+                if (isSolidTile(tx, ty)) {
+                    return true
+                }
             }
         }
-    }
 
-    return false
-}
+        return false
+    }
 }
 
 document.addEventListener("keydown", (e) => {
@@ -171,7 +175,7 @@ function run_frame() {
     const level = game.levels[game.current_level]
     const block_w = size[0] / level.width
     const block_h = size[1] / level.height
-    
+
     for (let y = 0; y < game.levels[game.current_level].height; y++) {
         for (let x = 0; x < game.levels[game.current_level].width; x++) {
 
@@ -195,57 +199,69 @@ function run_frame() {
     if (player.mkeys.d) {
         player.vx += player.acceleration
     }
-    if ((player.mkeys[" "] || player.mkeys["w"]) && player.grounded) {
+    if ((player.mkeys[" "] || player.mkeys["w"]) && (player.grounded||player.kyotime) && !player.since_jump) {
         player.vy -= player.jump_height
         player.grounded = false
+        player.since_jump = player.jump_cooldown
     }
+
+
+    if (player.since_jump)player.since_jump--
+    if (player.kyotime)player.kyotime--
+
+
     if (Math.abs(player.vx) > player.maxSpeed) {
         player.vx = player.maxSpeed * (player.vx / Math.abs(player.vx))
     }
-const nextX = player.x + player.vx
+    const nextX = player.x + player.vx
 
-if (!player.collidesWithLevel(nextX, player.y)) {
+    if (!player.collidesWithLevel(nextX, player.y)) {
 
-    player.x = nextX
+        player.x = nextX
 
-} else {
+    } else {
 
-    // stop horizontal movement
-    player.vx = 0
-}
-
-
-
-
-const nextY = player.y + player.vy
-
-if (!player.collidesWithLevel(player.x, nextY)) {
-
-    player.y = nextY
-    player.grounded = false
-
-} else {
-
-    // falling onto floor
-    if (player.vy > 0) {
-
-        player.grounded = true
-
+        // stop horizontal movement
+        player.vx = 0
     }
 
-    // hitting ceiling
-    if (player.vy < 0) {
 
-        // optional ceiling handling
+
+
+    const nextY = player.y + player.vy
+
+    if (!player.collidesWithLevel(player.x, nextY)) {
+
+        player.y = nextY
+        player.grounded = false
+
+    } else {
+
+        
+
+            while (!player.collidesWithLevel(player.x, player.y + Math.sign(player.vy))) {
+                player.y += Math.sign(player.vy)
+            }
+        
+        // falling onto floor
+        if (player.vy > 0) {
+
+            player.grounded = true
+
+        }
+
+
+
+        // stop vertical movement
+        player.vy = 0
     }
-
-    // stop vertical movement
-    player.vy = 0
-}
-
-    player.vx *= player.friction
+    if (player.grounded){
+    player.vx *= player.friction 
+    player.kyotime = player.max_kyotime
+    }
+    
     player.vy += game.gravity
-    if ( player.vx <0.0001)player.vx = 0
+    if (Math.abs(player.vx) < 0.0001) player.vx = 0
     player.draw()
     requestAnimationFrame(run_frame)
     // console.log(player.collidesWithLevel())
