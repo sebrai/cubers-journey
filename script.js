@@ -7,12 +7,64 @@ let game = {
     mx: 0,
     my: 0,
     gravity: 2,
+    gravpower: 1,
     looping: false,
+    time_in_level:0,
     levels: [
         {
             tiles: [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3,],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+
+            ],
+            width: 13,
+            height: 15,
+            tekst: ["press a and d to move, reach the flag to win"]
+
+        },
+        {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+
+            ],
+            width: 13,
+            height: 15,
+            tekst: ["spikes send you back to the beginning,",
+                "you can jump by pressing w or spacebar"
+            ],
+
+        },
+        {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
@@ -34,17 +86,17 @@ let game = {
         },
         {
             tiles: [
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0,],
                 [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,],
-                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3,],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
@@ -53,29 +105,38 @@ let game = {
             ],
             width: 13,
             height: 15,
+            tekst: ["try pressing e"],
+            sys_break: () => {
+                game.gravpower *= -1
+            }
 
         },
         {
             tiles: [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,],
-                [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,],
-                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+                [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,],
                 [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
 
             ],
             width: 13,
             height: 15,
+            tekst: ["isn't gravity manipulation cool,", "i think so"],
+            sys_break: () => {
+                game.gravpower *= -1
+            }
+
 
         },
         {
@@ -108,6 +169,7 @@ let game = {
         startile = this.get_playerstart()
         player.set_at_start()
         this.looping = true
+        this.time_in_level =0
         run_frame()
     },
     get_playerstart: function () {
@@ -132,6 +194,7 @@ let game = {
                 ctx.strokeStyle = this.levels_cleared >= index ? "#000000" : "#9e9e9e"
                 ctx.strokeRect(x, y, size[0] * 0.15, 100)
                 ctx.font = "48px Arial"
+                ctx.fillStyle = "black"
                 ctx.fillText(index + 1, x + size[0] * 0.06, y + 65)
 
                 if (this.levels_cleared >= index) hitboxes.push({ x: x, y: y, w: size[0] * 0.15, h: 100, i: index })
@@ -159,6 +222,7 @@ let game = {
         ctx.clearRect(0, 0, size[0], size[1])
         player.vx = 0
         player.vy = 0
+        this.gravpower = 1
         let level = await this.pick_level()
         this.start_level(level)
     }
@@ -199,6 +263,8 @@ let player = {
     retrying: 0,
     retry_max: 50,
     retryed: false,
+    break_cooldown: 0,
+    max_break_c: 20,
     mkeys: {
         "w": false,
         "a": false,
@@ -206,6 +272,7 @@ let player = {
         "d": false,
         " ": false,
         "r": false,
+        "e": false,
     },
     getangle: function () {
         let radians = Math.atan2(this.vy, this.vx);
@@ -258,6 +325,7 @@ let player = {
         return false
     },
     set_at_start: function () {
+        game.gravpower = 1
         const level = game.levels[game.current_level]
 
         const block_w = size[0] / level.width
@@ -270,6 +338,9 @@ let player = {
 
 const spikeImg = new Image()
 spikeImg.src = "./assets/spikes.png"
+
+const flagimg = new Image()
+flagimg.src = "./assets/flag.png"
 
 document.addEventListener("keydown", (e) => {
     let lkey = e.key.toLowerCase()
@@ -312,6 +383,17 @@ function run_frame() {
     const block_w = size[0] / level.width
     const block_h = size[1] / level.height
 
+    if (level.tekst&& game.time_in_level< 100) {
+        ctx.font = "48px Arial"
+        ctx.fillStyle = "black"
+        y = 100
+        for (let index = 0; index < level.tekst.length; index++) {
+            const element = level.tekst[index];
+            ctx.fillText(element, 50, y)
+            y += 50
+        }
+
+    }
     for (let y = 0; y < game.levels[game.current_level].height; y++) {
         for (let x = 0; x < game.levels[game.current_level].width; x++) {
 
@@ -325,8 +407,7 @@ function run_frame() {
                 // ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
 
             } else if (tile == 3) {
-                ctx.strokeStyle = "red"
-                ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
+                ctx.drawImage(flagimg, block_w * x, block_h * y, block_w, block_h)
             } else if (tile == 4) {
                 ctx.drawImage(spikeImg, block_w * x, block_h * y, block_w, block_h)
             }
@@ -339,7 +420,7 @@ function run_frame() {
         player.vx += player.acceleration
     }
     if ((player.mkeys[" "] || player.mkeys["w"]) && (player.grounded || player.kyotime) && !player.since_jump) {
-        player.vy -= player.jump_height
+        player.vy -= player.jump_height * game.gravpower
         player.grounded = false
         player.since_jump = player.jump_cooldown
     }
@@ -368,10 +449,16 @@ function run_frame() {
         player.retryed = false
     }
 
+    if (player.mkeys.e) {
+        if (level.sys_break && !player.break_cooldown) {
+            level.sys_break()
+            player.break_cooldown = player.max_break_c
+        }
+    }
 
     if (player.since_jump) player.since_jump--
     if (player.kyotime) player.kyotime--
-
+    if (player.break_cooldown) player.break_cooldown--
 
     if (Math.abs(player.vx) > player.maxSpeed) {
         player.vx = player.maxSpeed * (player.vx / Math.abs(player.vx))
@@ -407,7 +494,7 @@ function run_frame() {
         }
 
         // falling onto floor
-        if (player.vy > 0) {
+        if (player.vy * game.gravpower > 0) {
 
             player.grounded = true
 
@@ -423,7 +510,7 @@ function run_frame() {
         player.kyotime = player.max_kyotime
     }
 
-    player.vy += game.gravity
+    player.vy += game.gravity * game.gravpower
 
     const tileX = Math.floor(player.x / block_w)
     const tileY = Math.floor(player.y / block_h)
@@ -440,6 +527,7 @@ function run_frame() {
             localStorage.setItem("levels", JSON.stringify(game.levels_cleared))
         }
     }
+    game.time_in_level++
 
     if (Math.abs(player.vx) < 0.0001) player.vx = 0
     player.draw()
