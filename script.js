@@ -4,8 +4,8 @@ const ctx = c.getContext("2d")
 let game = {
     current_level: 0,
     levels_cleared: 0,
-    mx:0,
-    my:0,
+    mx: 0,
+    my: 0,
     gravity: 2,
     looping: false,
     levels: [
@@ -98,7 +98,7 @@ let game = {
                 ctx.font = "48px Arial"
                 ctx.fillText(index + 1, x + size[0] * 0.06, y + 65)
 
-                hitboxes.push({ x: x, y: y, w: size[0] * 0.15, h: 100,i:index })
+                hitboxes.push({ x: x, y: y, w: size[0] * 0.15, h: 100, i: index })
 
                 x += size[0] * 0.2
                 if (x > size[0]) {
@@ -107,10 +107,10 @@ let game = {
                 }
 
             }
-            
+
             c.addEventListener("click", () => {
                 hitboxes.forEach(element => {
-                    if ((game.mx > element.x && game.mx < element.x + element.w && game.my > element.y && game.my < element.y + element.h)){
+                    if ((game.mx > element.x && game.mx < element.x + element.w && game.my > element.y && game.my < element.y + element.h)) {
                         resolve(element.i)
                     }
                 });
@@ -157,12 +157,16 @@ let player = {
     since_jump: 0,
     grounded: false,
     color: "#3654fe",
+    retrying: 0,
+    retry_max: 50,
+    retryed: false,
     mkeys: {
         "w": false,
         "a": false,
         "s": false,
         "d": false,
-        " ": false
+        " ": false,
+        "r": false,
     },
     getangle: function () {
         let radians = Math.atan2(this.vy, this.vx);
@@ -172,7 +176,16 @@ let player = {
     draw: function () {
         ctx.fillStyle = player.color
         ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size)
-
+        let r = { x: player.x + player.size - 15, y: player.y - 30 }
+        let restart = ctx.createConicGradient(0, r.x, r.y)
+        restart.addColorStop(0, "#00000050")
+        restart.addColorStop(player.retrying / player.retry_max, "#00000050")
+        restart.addColorStop(player.retrying / player.retry_max, "#00000000")
+        restart.addColorStop(1, "#00000000")
+        ctx.fillStyle = restart
+        ctx.beginPath()
+        ctx.arc(r.x, r.y, 10, 0, Math.PI * 2)
+        ctx.fill()
     },
     collidesWithLevel: function (testX, testY) {
 
@@ -290,6 +303,30 @@ function run_frame() {
         player.vy -= player.jump_height
         player.grounded = false
         player.since_jump = player.jump_cooldown
+    }
+    if (player.mkeys.r) {
+
+        if (!player.retryed) {
+            player.retrying++
+
+            if (player.retrying >= player.retry_max) {
+
+                player.set_at_start()
+
+                player.vx = 0
+                player.vy = -5
+
+                player.retrying = 0
+                player.retryed = true
+            }
+        }
+
+    } else {
+
+        player.retrying = 0
+
+        // allow retry again only after release
+        player.retryed = false
     }
 
 
