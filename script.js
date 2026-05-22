@@ -197,28 +197,28 @@ let game = {
                 }
             }
         },
-         {
+        {
             tiles: [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 4, 3, 4, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 4, 4, 4, 0, 1, 1, 1, 0, 0,],
+                [0, 0, 0, 0, 1, 1, 1, 0, 4, 3, 4, 0, 0,],
+                [0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 1, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 4, 1, 0, 0, 0, 0, 2, 0, 0, 0,],
+                [0, 0, 0, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 4, 1, 1, 1, 1, 1, 1, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
 
             ],
             width: 13,
             height: 15,
-            tekst: ["i hope you used s key","during the previus level"],
+            tekst: ["i hope you used s key", "during the previus level"],
             sys_break: () => {
                 player.intangable = !player.intangable
                 if (!player.intangable && player.collidesWithLevel(player.x, player.y)) {
@@ -257,6 +257,8 @@ let game = {
                 const level = game.levels[index];
                 ctx.strokeStyle = this.levels_cleared >= index ? "#000000" : "#9e9e9e"
                 ctx.strokeRect(x, y, size[0] * 0.15, 100)
+                ctx.fillStyle = this.levels_cleared > index ? "#00ff626f" : "#ffffff"
+                ctx.fillRect(x, y, size[0] * 0.15, 100)
                 ctx.font = "48px Arial"
                 ctx.fillStyle = "black"
                 ctx.fillText(index + 1, x + size[0] * 0.06, y + 65)
@@ -315,7 +317,7 @@ let player = {
     vx: 0,
     vy: -5,
     friction: 0.7, // closer to 1 = more slipp
-    air_firction:0.85,
+    air_firction: 0.85,
     acceleration: 5,
     maxSpeed: 8,
     size: 30,
@@ -488,10 +490,13 @@ function run_frame() {
     if (player.mkeys.d) {
         player.vx += player.acceleration
     }
-    if(player.mkeys.s && player.intangable){
+    if (player.mkeys.s && player.intangable) {
         player.y += 4
     }
-    if ((player.mkeys[" "] || player.mkeys["w"]) && (player.grounded || player.kyotime) && !player.since_jump) {
+    if (player.mkeys.w && player.intangable && player.collidesWithLevel(player.x, player.y)) {
+        player.y -= 4
+    }
+    if (player.mkeys[" "] && (player.grounded || player.kyotime) && !player.since_jump) {
         player.vy -= player.jump_height * game.gravpower
         player.grounded = false
         player.since_jump = player.jump_cooldown
@@ -563,7 +568,7 @@ function run_frame() {
 
 
 
-    if (player.intangable && nextY - half >= 0 && nextY + half <= size[1]) {
+    if (player.intangable) {
 
         // only collide when falling onto ground
         if (player.vy * game.gravpower > 0) {
@@ -610,11 +615,19 @@ function run_frame() {
             player.vy = 0
         }
     }
+    if (player.y - half < 0) {
+        player.y = half
+        player.vy = 0
+    }
 
+    if (player.y + half > size[1]) {
+        player.y = size[1] - half
+        player.vy = 0
+    }
     if (player.grounded) {
         player.vx *= player.friction
         player.kyotime = player.max_kyotime
-    }else{
+    } else {
         player.vx *= player.air_firction
     }
 
