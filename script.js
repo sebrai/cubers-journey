@@ -163,6 +163,9 @@ let game = {
             tekst: ["wait how the hell is that possible"],
             sys_break: () => {
                 player.intangable = !player.intangable
+                if (!player.intangable && player.collidesWithLevel(player.x,player.y)){
+                    player.set_at_start()
+                }
             }
         },
 
