@@ -182,7 +182,7 @@ let game = {
                 [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
 
@@ -218,7 +218,7 @@ let game = {
             ],
             width: 13,
             height: 15,
-            tekst: ["i hope you used s key during the previus level"],
+            tekst: ["i hope you used s key","during the previus level"],
             sys_break: () => {
                 player.intangable = !player.intangable
                 if (!player.intangable && player.collidesWithLevel(player.x, player.y)) {
@@ -394,6 +394,7 @@ let player = {
     set_at_start: function () {
         game.gravpower = 1
         player.intangable = false
+        player.break_cooldown = 30
         const level = game.levels[game.current_level]
 
         const block_w = size[0] / level.width
