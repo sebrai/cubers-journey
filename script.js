@@ -142,16 +142,16 @@ let game = {
         {
             tiles: [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,],
-                [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,],
-                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
@@ -160,7 +160,10 @@ let game = {
             ],
             width: 13,
             height: 15,
-
+            tekst: ["wait how the hell is that possible"],
+            sys_break: () => {
+                player.intangable = !player.intangable
+            }
         },
 
     ],
@@ -223,6 +226,7 @@ let game = {
         player.vx = 0
         player.vy = 0
         this.gravpower = 1
+        player.intangable = false
         let level = await this.pick_level()
         this.start_level(level)
     }
@@ -264,7 +268,8 @@ let player = {
     retry_max: 50,
     retryed: false,
     break_cooldown: 0,
-    max_break_c: 15,
+    max_break_c: 20,
+    intangable:false,
     mkeys: {
         "w": false,
         "a": false,
@@ -294,7 +299,6 @@ let player = {
         ctx.fill()
     },
     collidesWithLevel: function (testX, testY) {
-
         const level = game.levels[game.current_level]
 
         const TILE_W = size[0] / level.width
@@ -326,6 +330,7 @@ let player = {
     },
     set_at_start: function () {
         game.gravpower = 1
+        player.intangable = false
         const level = game.levels[game.current_level]
 
         const block_w = size[0] / level.width
@@ -465,7 +470,7 @@ function run_frame() {
     }
     const nextX = player.x + player.vx
 
-    if (!player.collidesWithLevel(nextX, player.y)) {
+    if (!player.collidesWithLevel(nextX, player.y) || player.intangable) {
 
         player.x = nextX
 
