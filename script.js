@@ -163,7 +163,65 @@ let game = {
             tekst: ["wait how the hell is that possible"],
             sys_break: () => {
                 player.intangable = !player.intangable
-                if (!player.intangable && player.collidesWithLevel(player.x,player.y)){
+                if (!player.intangable && player.collidesWithLevel(player.x, player.y)) {
+                    player.set_at_start()
+                }
+            }
+        },
+        {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 0, 3, 0,],
+                [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0,],
+                [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+
+            ],
+            width: 13,
+            height: 15,
+            tekst: [" i heard ya like ladders"],
+            sys_break: () => {
+                player.intangable = !player.intangable
+                if (!player.intangable && player.collidesWithLevel(player.x, player.y)) {
+                    player.set_at_start()
+                }
+            }
+        },
+         {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 4, 3, 4, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+
+            ],
+            width: 13,
+            height: 15,
+            tekst: ["i hope you used s key during the previus level"],
+            sys_break: () => {
+                player.intangable = !player.intangable
+                if (!player.intangable && player.collidesWithLevel(player.x, player.y)) {
                     player.set_at_start()
                 }
             }
@@ -257,9 +315,10 @@ let player = {
     vx: 0,
     vy: -5,
     friction: 0.7, // closer to 1 = more slipp
+    air_firction:0.85,
     acceleration: 5,
     maxSpeed: 8,
-    size: 50,
+    size: 30,
     jump_height: 25,
     jump_cooldown: 25,
     max_kyotime: 5,
@@ -267,12 +326,13 @@ let player = {
     since_jump: 0,
     grounded: false,
     color: "#3654fe",
+    intang_color: "#3654fe71",
     retrying: 0,
     retry_max: 50,
     retryed: false,
     break_cooldown: 0,
     max_break_c: 20,
-    intangable:false,
+    intangable: false,
     mkeys: {
         "w": false,
         "a": false,
@@ -288,7 +348,7 @@ let player = {
         return { radians: radians, degrees: degrees }
     },
     draw: function () {
-        ctx.fillStyle = player.color
+        ctx.fillStyle = player.intangable ? player.intang_color : player.color
         ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size)
         let r = { x: player.x + player.size - 15, y: player.y - 30 }
         let restart = ctx.createConicGradient(0, r.x, r.y)
@@ -427,6 +487,9 @@ function run_frame() {
     if (player.mkeys.d) {
         player.vx += player.acceleration
     }
+    if(player.mkeys.s && player.intangable){
+        player.y += 4
+    }
     if ((player.mkeys[" "] || player.mkeys["w"]) && (player.grounded || player.kyotime) && !player.since_jump) {
         player.vy -= player.jump_height * game.gravpower
         player.grounded = false
@@ -473,13 +536,22 @@ function run_frame() {
     }
     const nextX = player.x + player.vx
 
-    if (!player.collidesWithLevel(nextX, player.y) || player.intangable) {
+    const half = player.size / 2
 
-        player.x = nextX
+    // keep inside horizontal map bounds
+    if (
+        nextX - half >= 0 &&
+        nextX + half <= size[0]
+    ) {
+
+        // intangible ignores horizontal collisions
+        if (!player.collidesWithLevel(nextX, player.y) || player.intangable) {
+            player.x = nextX
+        } else {
+            player.vx = 0
+        }
 
     } else {
-
-        // stop horizontal movement
         player.vx = 0
     }
 
@@ -488,34 +560,61 @@ function run_frame() {
 
     const nextY = player.y + player.vy
 
-    if (!player.collidesWithLevel(player.x, nextY)) {
 
-        player.y = nextY
-        player.grounded = false
+
+    if (player.intangable && nextY - half >= 0 && nextY + half <= size[1]) {
+
+        // only collide when falling onto ground
+        if (player.vy * game.gravpower > 0) {
+
+            if (!player.collidesWithLevel(player.x, nextY)) {
+
+                player.y = nextY
+                player.grounded = false
+
+            } else {
+
+                while (!player.collidesWithLevel(player.x, player.y + Math.sign(player.vy))) {
+                    player.y += Math.sign(player.vy)
+                }
+
+                player.grounded = true
+                player.vy = 0
+            }
+
+        } else {
+
+            // moving upward while intangible
+            player.y = nextY
+        }
 
     } else {
 
+        // normal collision logic
+        if (!player.collidesWithLevel(player.x, nextY)) {
 
+            player.y = nextY
+            player.grounded = false
 
-        while (!player.collidesWithLevel(player.x, player.y + Math.sign(player.vy))) {
-            player.y += Math.sign(player.vy)
+        } else {
+
+            while (!player.collidesWithLevel(player.x, player.y + Math.sign(player.vy))) {
+                player.y += Math.sign(player.vy)
+            }
+
+            if (player.vy * game.gravpower > 0) {
+                player.grounded = true
+            }
+
+            player.vy = 0
         }
-
-        // falling onto floor
-        if (player.vy * game.gravpower > 0) {
-
-            player.grounded = true
-
-        }
-
-
-
-        // stop vertical movement
-        player.vy = 0
     }
+
     if (player.grounded) {
         player.vx *= player.friction
         player.kyotime = player.max_kyotime
+    }else{
+        player.vx *= player.air_firction
     }
 
     player.vy += game.gravity * game.gravpower
@@ -528,7 +627,7 @@ function run_frame() {
         player.vx = 0
         player.vy = -5
     }
-    if (level.tiles[tileY]?.[tileX] === 3) {
+    if (level.tiles[tileY]?.[tileX] === 3 && !player.intangable) {
         game.looping = false
         if (game.current_level == game.levels_cleared) {
             game.levels_cleared++
