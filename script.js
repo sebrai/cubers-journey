@@ -69,7 +69,7 @@ let game = {
                 [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 1, 1, 0, 0, 0, 0, 5, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,],
                 [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
@@ -83,13 +83,14 @@ let game = {
             ],
             width: 13,
             height: 15,
+            coin_claimed:false,
 
         },
         {
             tiles: [
                 [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,],
@@ -116,7 +117,7 @@ let game = {
             tiles: [
                 [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
@@ -145,10 +146,10 @@ let game = {
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,],
@@ -181,7 +182,7 @@ let game = {
                 [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [2, 0, 0, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
@@ -244,7 +245,7 @@ let game = {
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,],
-                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4,],
 
             ],
             width: 13,
@@ -260,8 +261,8 @@ let game = {
                     game.levels[game.current_level].disabled = false
                     if (game.tilemap[click.y]?.[click.x] != null) {
                         game.tilemap[click.y][click.x] += 1
-                        if (game.tilemap[click.y][click.x] > 4) {
-                            game.tilemap[click.y][click.x] == 0
+                        if (game.tilemap[click.y][click.x] >= 5) {
+                            game.tilemap[click.y][click.x] = 0
                         }
                     }
 
@@ -279,7 +280,7 @@ let game = {
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
@@ -300,8 +301,8 @@ let game = {
                     game.levels[game.current_level].disabled = false
                     if (game.tilemap[click.y]?.[click.x] != null) {
                         game.tilemap[click.y][click.x] += 1
-                        if (game.tilemap[click.y][click.x] > 4) {
-                            game.tilemap[click.y][click.x] == 0
+                        if (game.tilemap[click.y][click.x] >= 5) {
+                            game.tilemap[click.y][click.x] = 0
                         }
                     }
 
@@ -332,6 +333,7 @@ let game = {
         player.set_at_start()
         this.looping = true
         this.time_in_level = 0
+        
         this.tilemap = structuredClone(this.levels[this.current_level].tiles)
         run_frame()
     },
@@ -504,6 +506,7 @@ let player = {
         player.x = startile.x * block_w + block_w / 2
         player.y = startile.y * block_h + block_h / 2
         game.tilemap = structuredClone(level.tiles)
+        level.coin_claimed = false
     }
 }
 
@@ -512,6 +515,8 @@ spikeImg.src = "./assets/spikes.png"
 
 const flagimg = new Image()
 flagimg.src = "./assets/flag.png"
+const coinimg = new Image()
+coinimg.src = "./assets/coin.png"
 
 document.addEventListener("keydown", (e) => {
     let lkey = e.key.toLowerCase()
@@ -583,6 +588,10 @@ function run_frame() {
                 ctx.drawImage(flagimg, block_w * x, block_h * y, block_w, block_h)
             } else if (tile == 4) {
                 ctx.drawImage(spikeImg, block_w * x, block_h * y, block_w, block_h)
+            }
+            else if (tile == 5 && !level.coin_claimed){
+
+                ctx.drawImage(coinimg, block_w * x+ block_w*0.2, block_h * y, block_w*0.6, block_h)
             }
         }
     }
@@ -749,6 +758,9 @@ function run_frame() {
             game.levels_cleared++
             localStorage.setItem("levels", JSON.stringify(game.levels_cleared))
         }
+    }
+    if (game.tilemap[tileY]?.[tileX] === 5 && !player.intangable){
+        level.coin_claimed = true
     }
     game.time_in_level++
 
