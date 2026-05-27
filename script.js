@@ -10,6 +10,7 @@ let game = {
     gravpower: 1,
     looping: false,
     time_in_level: 0,
+    tilemap: [[], []],
     levels: [
         {
             tiles: [
@@ -227,13 +228,111 @@ let game = {
             }
         },
 
+        {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+
+            ],
+            width: 13,
+            height: 15,
+            tekst: ["new power now bozo", "after pressing e try clicking your spawn point"],
+            disabled: false,
+            sys_break: () => {
+                c.style.cursor = "pointer"
+                game.levels[game.current_level].disabled = true
+                c.addEventListener("click", () => {
+                    const click = game.get_clicked_tile()
+                    c.style.cursor = "auto"
+                    game.levels[game.current_level].disabled = false
+                    if (game.tilemap[click.y]?.[click.x] != null) {
+                        game.tilemap[click.y][click.x] += 1
+                        if (game.tilemap[click.y][click.x] > 4) {
+                            game.tilemap[click.y][click.x] == 0
+                        }
+                    }
+
+                }, { once: true })
+            }
+        },
+         {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,],
+
+            ],
+            width: 13,
+            height: 15,
+            tekst: ["air > block > spawn points > flags > air","now try and reach your spawn again"],
+            disabled: false,
+            sys_break: () => {
+                c.style.cursor = "pointer"
+                game.levels[game.current_level].disabled = true
+                c.addEventListener("click", () => {
+                    const click = game.get_clicked_tile()
+                    c.style.cursor = "auto"
+                    game.levels[game.current_level].disabled = false
+                    if (game.tilemap[click.y]?.[click.x] != null) {
+                        game.tilemap[click.y][click.x] += 1
+                        if (game.tilemap[click.y][click.x] > 4) {
+                            game.tilemap[click.y][click.x] == 0
+                        }
+                    }
+
+                }, { once: true })
+            }
+        },
+
     ],
+
+    get_clicked_tile: function () {
+        const level = game.levels[game.current_level]
+
+        const TILE_W = size[0] / level.width
+        const TILE_H = size[1] / level.height
+
+        let x = Math.floor(this.mx / TILE_W)
+        let y = Math.floor(this.my / TILE_H)
+
+        return {
+            x,
+            y,
+            value: game.tilemap[y]?.[x]
+        }
+    },
     start_level: function (level_index = 0) {
         this.current_level = level_index
         startile = this.get_playerstart()
         player.set_at_start()
         this.looping = true
         this.time_in_level = 0
+        this.tilemap = structuredClone(this.levels[this.current_level].tiles)
         run_frame()
     },
     get_playerstart: function () {
@@ -404,6 +503,7 @@ let player = {
 
         player.x = startile.x * block_w + block_w / 2
         player.y = startile.y * block_h + block_h / 2
+        game.tilemap = structuredClone(level.tiles)
     }
 }
 
@@ -444,7 +544,7 @@ function isSolidTile(tileX, tileY) {
     ) {
         return true
     }
-    return level.tiles[tileY][tileX] === 1
+    return game.tilemap[tileY][tileX] === 1
 }
 
 function run_frame() {
@@ -454,7 +554,7 @@ function run_frame() {
     const block_w = size[0] / level.width
     const block_h = size[1] / level.height
 
-    if (level.tekst && game.time_in_level < 100) {
+    if (level.tekst && game.time_in_level < 200) {
         ctx.font = "48px Arial"
         ctx.fillStyle = "black"
         y = 100
@@ -468,15 +568,17 @@ function run_frame() {
     for (let y = 0; y < game.levels[game.current_level].height; y++) {
         for (let x = 0; x < game.levels[game.current_level].width; x++) {
 
-            const tile = game.levels[game.current_level].tiles[y][x];
+            const tile = game.tilemap[y][x];
 
             if (tile === 1) {
                 ctx.strokeStyle = "black"
                 ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
             } else if (tile == 2) {
-                // ctx.strokeStyle = "blue"
-                // ctx.strokeRect(x * block_w, y * block_h, block_w, block_h);
-
+                ctx.strokeStyle = "blue"
+                ctx.beginPath()
+                ctx.arc((x + 0.5) * block_w, (y + 0.5) * block_h, block_w * 0.2, 0, 2 * Math.PI)
+                ctx.closePath()
+                ctx.stroke()
             } else if (tile == 3) {
                 ctx.drawImage(flagimg, block_w * x, block_h * y, block_w, block_h)
             } else if (tile == 4) {
@@ -527,7 +629,7 @@ function run_frame() {
     }
 
     if (player.mkeys.e) {
-        if (level.sys_break && !player.break_cooldown) {
+        if (level.sys_break && !player.break_cooldown && !level.disabled) {
             level.sys_break()
             player.break_cooldown = player.max_break_c
         }
@@ -636,12 +738,12 @@ function run_frame() {
     const tileX = Math.floor(player.x / block_w)
     const tileY = Math.floor(player.y / block_h)
 
-    if (level.tiles[tileY]?.[tileX] === 4) {
+    if (game.tilemap[tileY]?.[tileX] === 4) {
         player.set_at_start()
         player.vx = 0
         player.vy = -5
     }
-    if (level.tiles[tileY]?.[tileX] === 3 && !player.intangable) {
+    if (game.tilemap[tileY]?.[tileX] === 3 && !player.intangable) {
         game.looping = false
         if (game.current_level == game.levels_cleared) {
             game.levels_cleared++
