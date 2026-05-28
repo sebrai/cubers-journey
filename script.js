@@ -83,7 +83,7 @@ let game = {
             ],
             width: 13,
             height: 15,
-            coin_claimed:false,
+            coin_claimed: false,
 
         },
         {
@@ -269,7 +269,7 @@ let game = {
                 }, { once: true })
             }
         },
-         {
+        {
             tiles: [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,],
@@ -290,7 +290,7 @@ let game = {
             ],
             width: 13,
             height: 15,
-            tekst: ["air > block > spawn points > flags > air","now try and reach your spawn again"],
+            tekst: ["air > block > spawn points > flags > air", "now try and reach your spawn again"],
             disabled: false,
             sys_break: () => {
                 c.style.cursor = "pointer"
@@ -303,6 +303,94 @@ let game = {
                         game.tilemap[click.y][click.x] += 1
                         if (game.tilemap[click.y][click.x] >= 5) {
                             game.tilemap[click.y][click.x] = 0
+                        }
+                    }
+
+                }, { once: true })
+            }
+        },
+        {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 4, 0, 0, 4, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [1, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,],
+                [1, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+
+            ],
+            width: 13,
+            height: 15,
+            tekst: ["spikes > blocks or air  ","thats all you control now", "every other use swaps what you transform" ],
+            disabled: false,
+            state: 0,
+            sys_break: () => {
+                c.style.cursor = "pointer"
+                game.levels[game.current_level].disabled = true
+                c.addEventListener("click", () => {
+                    const click = game.get_clicked_tile()
+                    c.style.cursor = "auto"
+                    game.levels[game.current_level].disabled = false
+                    if (game.tilemap[click.y]?.[click.x] != null) {
+                        if (game.tilemap[click.y]?.[click.x] == 4 && game.levels[game.current_level].state == 0) {
+                            game.tilemap[click.y][click.x] = 1
+                            game.levels[game.current_level].state = 1
+                        } else if (game.levels[game.current_level].state == 1 && game.tilemap[click.y]?.[click.x] == 4){
+                            game.tilemap[click.y][click.x] = 0
+                            game.levels[game.current_level].state = 0
+                        }
+                    }
+
+                }, { once: true })
+            }
+        },
+         {
+            tiles: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0,],
+                [0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 2, 0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0,],
+                [0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+
+            ],
+            width: 13,
+            height: 15,
+            tekst: ["spawn > blocks or spikes  ","same switching as last level", ],
+            disabled: false,
+            state: 0,
+            sys_break: () => {
+                c.style.cursor = "pointer"
+                game.levels[game.current_level].disabled = true
+                c.addEventListener("click", () => {
+                    const click = game.get_clicked_tile()
+                    c.style.cursor = "auto"
+                    game.levels[game.current_level].disabled = false
+                    if (game.tilemap[click.y]?.[click.x] != null) {
+                        if (game.tilemap[click.y]?.[click.x] == 2 && game.levels[game.current_level].state == 0) {
+                            game.tilemap[click.y][click.x] = 1
+                            game.levels[game.current_level].state = 1
+                        } else if (game.tilemap[click.y]?.[click.x] == 2 && game.levels[game.current_level].state == 1){
+                            game.tilemap[click.y][click.x] = 4
+                            game.levels[game.current_level].state = 0
                         }
                     }
 
@@ -333,8 +421,9 @@ let game = {
         player.set_at_start()
         this.looping = true
         this.time_in_level = 0
-        
+
         this.tilemap = structuredClone(this.levels[this.current_level].tiles)
+        if (this.levels[this.current_level].state != undefined) this.levels[this.current_level].state = 0
         run_frame()
     },
     get_playerstart: function () {
@@ -498,6 +587,7 @@ let player = {
         game.gravpower = 1
         player.intangable = false
         player.break_cooldown = 30
+        if (game.levels[game.current_level].state != undefined) game.levels[game.current_level].state = 0
         const level = game.levels[game.current_level]
 
         const block_w = size[0] / level.width
@@ -589,9 +679,9 @@ function run_frame() {
             } else if (tile == 4) {
                 ctx.drawImage(spikeImg, block_w * x, block_h * y, block_w, block_h)
             }
-            else if (tile == 5 && !level.coin_claimed){
+            else if (tile == 5 && !level.coin_claimed) {
 
-                ctx.drawImage(coinimg, block_w * x+ block_w*0.2, block_h * y, block_w*0.6, block_h)
+                ctx.drawImage(coinimg, block_w * x + block_w * 0.2, block_h * y, block_w * 0.6, block_h)
             }
         }
     }
@@ -759,7 +849,7 @@ function run_frame() {
             localStorage.setItem("levels", JSON.stringify(game.levels_cleared))
         }
     }
-    if (game.tilemap[tileY]?.[tileX] === 5 && !player.intangable){
+    if (game.tilemap[tileY]?.[tileX] === 5 && !player.intangable) {
         level.coin_claimed = true
     }
     game.time_in_level++
